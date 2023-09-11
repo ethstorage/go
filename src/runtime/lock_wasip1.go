@@ -103,5 +103,6 @@ func beforeIdle(int64, int64) (*g, bool) {
 
 func checkTimeouts() {}
 
-//go:wasmimport wasi_snapshot_preview1 sched_yield
-func sched_yield() errno
+func sched_yield() errno {
+	return 0
+}

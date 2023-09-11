@@ -6,7 +6,9 @@
 
 package runtime
 
-import "unsafe"
+import (
+	"unsafe"
+)
 
 // GOARCH=wasm currently has 64 bits pointers, but the WebAssembly host expects
 // pointers to be 32 bits so we use this type alias to represent pointers in
@@ -43,8 +45,9 @@ type iovec struct {
 	bufLen size
 }
 
-//go:wasmimport wasi_snapshot_preview1 proc_exit
-func exit(code int32)
+func exit(code int32) {
+	return
+}
 
 //go:wasmimport wasi_snapshot_preview1 args_get
 //go:noescape
@@ -54,9 +57,10 @@ func args_get(argv, argvBuf unsafe.Pointer) errno
 //go:noescape
 func args_sizes_get(argc, argvBufLen unsafe.Pointer) errno
 
-//go:wasmimport wasi_snapshot_preview1 clock_time_get
-//go:noescape
-func clock_time_get(clock_id clockid, precision timestamp, time unsafe.Pointer) errno
+func clock_time_get(clock_id clockid, precision timestamp, time unsafe.Pointer) errno {
+	*(*timestamp)(time) = 1
+	return 0
+}
 
 //go:wasmimport wasi_snapshot_preview1 environ_get
 //go:noescape
@@ -66,13 +70,14 @@ func environ_get(environ, environBuf unsafe.Pointer) errno
 //go:noescape
 func environ_sizes_get(environCount, environBufLen unsafe.Pointer) errno
 
-//go:wasmimport wasi_snapshot_preview1 fd_write
-//go:noescape
-func fd_write(fd int32, iovs unsafe.Pointer, iovsLen size, nwritten unsafe.Pointer) errno
+func fd_write(fd int32, iovs unsafe.Pointer, iovsLen size, nwritten unsafe.Pointer) errno {
+	*(*size)(nwritten) = 0
+	return 0
+}
 
-//go:wasmimport wasi_snapshot_preview1 random_get
-//go:noescape
-func random_get(buf unsafe.Pointer, bufLen size) errno
+func random_get(buf unsafe.Pointer, bufLen size) errno {
+	return 0
+}
 
 type eventtype = uint8
 
@@ -146,9 +151,9 @@ func (u *subscriptionUnion) subscriptionFdReadwrite() *subscriptionFdReadwrite {
 	return (*subscriptionFdReadwrite)(unsafe.Pointer(&u[1]))
 }
 
-//go:wasmimport wasi_snapshot_preview1 poll_oneoff
-//go:noescape
-func poll_oneoff(in, out unsafe.Pointer, nsubscriptions size, nevents unsafe.Pointer) errno
+func poll_oneoff(in, out unsafe.Pointer, nsubscriptions size, nevents unsafe.Pointer) errno {
+	return 0
+}
 
 func write1(fd uintptr, p unsafe.Pointer, n int32) int32 {
 	iov := iovec{
@@ -187,6 +192,16 @@ func getRandomData(r []byte) {
 }
 
 func goenvs() {
+	// arguments
+	var argc size = 3
+	argslice = make([]string, argc)
+
+	// environment
+	var environCount size = 53
+	envs = make([]string, environCount)
+}
+
+func _goenvs() {
 	// arguments
 	var argc size
 	var argvBufLen size

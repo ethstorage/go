@@ -174,10 +174,9 @@ const (
 )
 
 // https://github.com/WebAssembly/WASI/blob/a2b96e81c0586125cc4dc79a5be0b78d9a059925/legacy/preview1/docs.md#-fd_closefd-fd---result-errno
-//
-//go:wasmimport wasi_snapshot_preview1 fd_close
-//go:noescape
-func fd_close(fd int32) Errno
+func fd_close(fd int32) Errno {
+	return 0
+}
 
 // https://github.com/WebAssembly/WASI/blob/a2b96e81c0586125cc4dc79a5be0b78d9a059925/legacy/preview1/docs.md#-fd_filestat_set_sizefd-fd-size-filesize---result-errno
 //
@@ -187,21 +186,22 @@ func fd_filestat_set_size(fd int32, set_size filesize) Errno
 
 // https://github.com/WebAssembly/WASI/blob/a2b96e81c0586125cc4dc79a5be0b78d9a059925/legacy/preview1/docs.md#-fd_preadfd-fd-iovs-iovec_array-offset-filesize---resultsize-errno
 //
-//go:wasmimport wasi_snapshot_preview1 fd_pread
-//go:noescape
-func fd_pread(fd int32, iovs unsafe.Pointer, iovsLen size, offset filesize, nread unsafe.Pointer) Errno
+
+func fd_pread(fd int32, iovs unsafe.Pointer, iovsLen size, offset filesize, nread unsafe.Pointer) Errno {
+	return 0
+}
 
 //go:wasmimport wasi_snapshot_preview1 fd_pwrite
 //go:noescape
 func fd_pwrite(fd int32, iovs unsafe.Pointer, iovsLen size, offset filesize, nwritten unsafe.Pointer) Errno
 
-//go:wasmimport wasi_snapshot_preview1 fd_read
-//go:noescape
-func fd_read(fd int32, iovs unsafe.Pointer, iovsLen size, nread unsafe.Pointer) Errno
+func fd_read(fd int32, iovs unsafe.Pointer, iovsLen size, nread unsafe.Pointer) Errno {
+	return 0
+}
 
-//go:wasmimport wasi_snapshot_preview1 fd_readdir
-//go:noescape
-func fd_readdir(fd int32, buf unsafe.Pointer, bufLen size, cookie dircookie, nwritten unsafe.Pointer) Errno
+func fd_readdir(fd int32, buf unsafe.Pointer, bufLen size, cookie dircookie, nwritten unsafe.Pointer) Errno {
+	return 0
+}
 
 //go:wasmimport wasi_snapshot_preview1 fd_seek
 //go:noescape
@@ -213,13 +213,14 @@ func fd_seek(fd int32, offset filedelta, whence uint32, newoffset unsafe.Pointer
 //go:noescape
 func fd_fdstat_set_rights(fd int32, rightsBase rights, rightsInheriting rights) Errno
 
-//go:wasmimport wasi_snapshot_preview1 fd_filestat_get
-//go:noescape
-func fd_filestat_get(fd int32, buf unsafe.Pointer) Errno
+func fd_filestat_get(fd int32, buf unsafe.Pointer) Errno {
+	return 0
+}
 
-//go:wasmimport wasi_snapshot_preview1 fd_write
-//go:noescape
-func fd_write(fd int32, iovs unsafe.Pointer, iovsLen size, nwritten unsafe.Pointer) Errno
+func fd_write(fd int32, iovs unsafe.Pointer, iovsLen size, nwritten unsafe.Pointer) Errno {
+	*(*size)(nwritten) = 0
+	return 0
+}
 
 //go:wasmimport wasi_snapshot_preview1 fd_sync
 //go:noescape
@@ -229,9 +230,9 @@ func fd_sync(fd int32) Errno
 //go:noescape
 func path_create_directory(fd int32, path unsafe.Pointer, pathLen size) Errno
 
-//go:wasmimport wasi_snapshot_preview1 path_filestat_get
-//go:noescape
-func path_filestat_get(fd int32, flags lookupflags, path unsafe.Pointer, pathLen size, buf unsafe.Pointer) Errno
+func path_filestat_get(fd int32, flags lookupflags, path unsafe.Pointer, pathLen size, buf unsafe.Pointer) Errno {
+	return 0
+}
 
 //go:wasmimport wasi_snapshot_preview1 path_filestat_set_times
 //go:noescape
@@ -261,13 +262,13 @@ func path_symlink(oldPath unsafe.Pointer, oldPathLen size, fd int32, newPath uns
 //go:noescape
 func path_unlink_file(fd int32, path unsafe.Pointer, pathLen size) Errno
 
-//go:wasmimport wasi_snapshot_preview1 path_open
-//go:noescape
-func path_open(rootFD int32, dirflags lookupflags, path unsafe.Pointer, pathLen size, oflags oflags, fsRightsBase rights, fsRightsInheriting rights, fsFlags fdflags, fd unsafe.Pointer) Errno
+func path_open(rootFD int32, dirflags lookupflags, path unsafe.Pointer, pathLen size, oflags oflags, fsRightsBase rights, fsRightsInheriting rights, fsFlags fdflags, fd unsafe.Pointer) Errno {
+	return 0
+}
 
-//go:wasmimport wasi_snapshot_preview1 random_get
-//go:noescape
-func random_get(buf unsafe.Pointer, bufLen size) Errno
+func random_get(buf unsafe.Pointer, bufLen size) Errno {
+	return 0
+}
 
 // https://github.com/WebAssembly/WASI/blob/a2b96e81c0586125cc4dc79a5be0b78d9a059925/legacy/preview1/docs.md#-fdstat-record
 // fdflags must be at offset 2, hence the uint16 type rather than the
@@ -279,13 +280,13 @@ type fdstat struct {
 	rightsInheriting rights
 }
 
-//go:wasmimport wasi_snapshot_preview1 fd_fdstat_get
-//go:noescape
-func fd_fdstat_get(fd int32, buf unsafe.Pointer) Errno
+func fd_fdstat_get(fd int32, buf unsafe.Pointer) Errno {
+	return 0
+}
 
-//go:wasmimport wasi_snapshot_preview1 fd_fdstat_set_flags
-//go:noescape
-func fd_fdstat_set_flags(fd int32, flags fdflags) Errno
+func fd_fdstat_set_flags(fd int32, flags fdflags) Errno {
+	return 0
+}
 
 func fd_fdstat_get_flags(fd int) (uint32, error) {
 	var stat fdstat
@@ -314,13 +315,13 @@ type prestat struct {
 	dir prestatDir
 }
 
-//go:wasmimport wasi_snapshot_preview1 fd_prestat_get
-//go:noescape
-func fd_prestat_get(fd int32, prestat unsafe.Pointer) Errno
+func fd_prestat_get(fd int32, prestat unsafe.Pointer) Errno {
+	return 8
+}
 
-//go:wasmimport wasi_snapshot_preview1 fd_prestat_dir_name
-//go:noescape
-func fd_prestat_dir_name(fd int32, path unsafe.Pointer, pathLen size) Errno
+func fd_prestat_dir_name(fd int32, path unsafe.Pointer, pathLen size) Errno {
+	return 0
+}
 
 type opendir struct {
 	fd   int32
