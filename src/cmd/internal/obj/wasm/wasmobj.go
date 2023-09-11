@@ -920,6 +920,8 @@ var notUsePC_B = map[string]bool{
 	"runtime.gcWriteBarrier6": true,
 	"runtime.gcWriteBarrier7": true,
 	"runtime.gcWriteBarrier8": true,
+	"runtime.wasmMove":        true,
+	"runtime.wasmZero":        true,
 	"runtime.wasmDiv":         true,
 	"runtime.wasmTruncS":      true,
 	"runtime.wasmTruncU":      true,
@@ -962,7 +964,8 @@ func assemble(ctxt *obj.Link, s *obj.LSym, newprog obj.ProgAlloc) {
 	// Some functions use a special calling convention.
 	switch s.Name {
 	case "_rt0_wasm_js", "_rt0_wasm_wasip1", "wasm_export_run", "wasm_export_resume", "wasm_export_getsp",
-		"wasm_pc_f_loop", "runtime.wasmDiv", "runtime.wasmTruncS", "runtime.wasmTruncU", "memeqbody":
+		"wasm_pc_f_loop", "runtime.wasmMove", "runtime.wasmZero", "runtime.wasmDiv", "runtime.wasmTruncS",
+		"runtime.wasmTruncU", "memeqbody":
 		varDecls = []*varDecl{}
 		useAssemblyRegMap()
 	case "memchr", "memcmp":
@@ -1216,11 +1219,7 @@ func assemble(ctxt *obj.Link, s *obj.LSym, newprog obj.ProgAlloc) {
 			writeUleb128(w, align(p.As))
 			writeUleb128(w, uint64(p.To.Offset))
 
-		case ACurrentMemory, AGrowMemory, AMemoryFill:
-			w.WriteByte(0x00)
-
-		case AMemoryCopy:
-			w.WriteByte(0x00)
+		case ACurrentMemory, AGrowMemory:
 			w.WriteByte(0x00)
 
 		}

@@ -322,8 +322,10 @@ TEXT NAME(SB), WRAPPER, $MAXSIZE-48; \
 		I64Load stackArgs+16(FP); \
 		I32WrapI64; \
 		I64Load stackArgsSize+24(FP); \
+		I64Const $3; \
+		I64ShrU; \
 		I32WrapI64; \
-		MemoryCopy; \
+		Call runtime·wasmMove(SB); \
 	End; \
 	\
 	MOVD f+8(FP), CTXT; \
