@@ -456,15 +456,22 @@ func writeExportSec(ctxt *ld.Link, ldr *loader.Loader, lenHostImports int) {
 
 	switch buildcfg.GOOS {
 	case "wasip1":
-		writeUleb128(ctxt.Out, 2) // number of exports
+		writeUleb128(ctxt.Out, 3) // number of exports
 		s := ldr.Lookup("_rt0_wasm_wasip1", 0)
 		idx := uint32(lenHostImports) + uint32(ldr.SymValue(s)>>16) - funcValueOffset
 		writeName(ctxt.Out, "_start")       // the wasi entrypoint
 		ctxt.Out.WriteByte(0x00)            // func export
 		writeUleb128(ctxt.Out, uint64(idx)) // funcidx
-		writeName(ctxt.Out, "memory")       // memory in wasi
-		ctxt.Out.WriteByte(0x02)            // mem export
-		writeUleb128(ctxt.Out, 0)           // memidx
+
+		s1 := ldr.Lookup("_rt0_wasm_wasip1", 0)
+		idx1 := uint32(lenHostImports) + uint32(ldr.SymValue(s1)>>16) - funcValueOffset
+		writeName(ctxt.Out, "zkmain")        // the wasi entrypoint
+		ctxt.Out.WriteByte(0x00)             // func export
+		writeUleb128(ctxt.Out, uint64(idx1)) // funcidx
+
+		writeName(ctxt.Out, "memory") // memory in wasi
+		ctxt.Out.WriteByte(0x02)      // mem export
+		writeUleb128(ctxt.Out, 0)     // memidx
 	case "js":
 		writeUleb128(ctxt.Out, 4) // number of exports
 		for _, name := range []string{"run", "resume", "getsp"} {
