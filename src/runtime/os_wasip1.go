@@ -45,8 +45,9 @@ type iovec struct {
 	bufLen size
 }
 
-//go:wasmimport env wasm_exit
-func exit(code int32)
+func exit(code int32) {
+	return
+}
 
 //go:wasmimport wasi_snapshot_preview1 args_get
 //go:noescape
