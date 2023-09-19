@@ -288,7 +288,7 @@ func main() {
 	}
 	runExitHooks(0)
 
-	if GOARCH == "wasm" {
+	if GOOS == "wasip1" {
 		wasmPause()
 	} else {
 		exit(0)

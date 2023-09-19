@@ -14,3 +14,8 @@ TEXT _rt0_wasm_wasip1(SB),NOSPLIT,$0
 	Call wasm_pc_f_loop(SB)
 
 	Return
+
+TEXT runtime·wasmPause(SB),NOSPLIT,$0
+	I32Const $1
+	Set PAUSE
+	RETUNWIND
