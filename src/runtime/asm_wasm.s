@@ -523,5 +523,10 @@ TEXT wasm_pc_f_loop(SB),NOSPLIT,$0
 
 	Return
 
+TEXT runtime·wasmPause(SB),NOSPLIT,$0
+	I32Const $1
+	Set PAUSE
+	RETUNWIND
+
 TEXT wasm_export_lib(SB),NOSPLIT,$0
 	UNDEF

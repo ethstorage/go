@@ -288,10 +288,10 @@ func main() {
 	}
 	runExitHooks(0)
 
-	exit(0)
-	for {
-		var x *int32
-		*x = 0
+	if GOARCH == "wasm" {
+		wasmPause()
+	} else {
+		exit(0)
 	}
 }
 

@@ -106,3 +106,5 @@ func checkTimeouts() {}
 func sched_yield() errno {
 	return 0
 }
+
+func wasmPause()

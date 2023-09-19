@@ -307,3 +307,7 @@ var eventHandler func() bool
 func setEventHandler(fn func() bool) {
 	eventHandler = fn
 }
+
+func wasmPause() {
+
+}

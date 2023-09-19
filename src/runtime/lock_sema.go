@@ -302,3 +302,7 @@ func beforeIdle(int64, int64) (*g, bool) {
 }
 
 func checkTimeouts() {}
+
+func wasmPause() {
+
+}
