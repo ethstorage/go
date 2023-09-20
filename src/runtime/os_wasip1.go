@@ -49,7 +49,11 @@ type iovec struct {
 func require(code int32)
 
 func exit(code int32) {
-	require(0)
+	if code == 0 {
+		wasmPause()
+	} else {
+		require(0)
+	}
 }
 
 //go:wasmimport wasi_snapshot_preview1 args_get
