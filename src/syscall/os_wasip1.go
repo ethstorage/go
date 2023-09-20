@@ -5,5 +5,5 @@
 package syscall
 
 func ProcExit(code int32) {
-	return
+	require(0)
 }
