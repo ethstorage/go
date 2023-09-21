@@ -5,9 +5,5 @@
 package syscall
 
 func ProcExit(code int32) {
-	if code == 0 {
-		wasmPause()
-	} else {
-		require(0)
-	}
+	return
 }
