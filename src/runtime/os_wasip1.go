@@ -45,8 +45,20 @@ type iovec struct {
 	bufLen size
 }
 
+//go:wasmimport env require
+func require(code int32)
+
 func exit(code int32) {
-	return
+	// For a normal exit, we call wasmPause(), it will not immediately exit, it just sets global var PAUSE to nonzero
+	// so that goroutine would exit mainloop
+	// For any code other than 0, it indicates an error. For target zkWASM, we call zkWASM predefined hostio require(0)
+	// to marks it abnormal. It serves like assertion and it would immediately invalid proving circuit and exit in
+	// zkWASM runtime. Thus all cases have been covered.
+	if code == 0 {
+		wasmPause()
+	} else {
+		require(0)
+	}
 }
 
 //go:wasmimport wasi_snapshot_preview1 args_get
