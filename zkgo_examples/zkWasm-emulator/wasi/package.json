@@ -1,0 +1,11 @@
+{
+  "name": "zkwasm_emulator",
+  "version": "1.0.0",
+  "type":"module",
+  "description": "zkWasm node emulator for wasi",
+  "author": "ethstorage",
+  "license": "ISC",
+  "engines" : {
+    "node" : ">=20.5.1"
+  }
+}
