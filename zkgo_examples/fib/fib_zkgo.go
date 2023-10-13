@@ -4,14 +4,9 @@ package main
 //go:noescape
 func wasm_input(isPublic uint32) uint64
 
-//go:wasmimport env wasm_output
-//go:noescape
-func wasm_output(value uint64)
-
 //go:wasmimport env require
 //go:noescape
 func require(uint32)
-
 
 func main() {
 	var a0, a1, an uint64;
@@ -22,5 +17,8 @@ func main() {
 		a0 = a1;
 		a1 = an;
 	}
-	wasm_output(an);
+	ai := wasm_input(1);
+	if ai != an {
+		require(0);
+	}
 }
