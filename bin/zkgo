@@ -1,0 +1,7 @@
+#!/bin/bash
+  
+cmd=$1
+
+shift
+
+GOOS=wasip1 GOARCH=wasm go $cmd -gcflags=all=-d=softfloat $@
