@@ -9,16 +9,14 @@ func wasm_input(isPublic uint32) uint64
 func require(uint32)
 
 func main() {
-	var a0, a1, an uint64;
-	a0 = wasm_input(1);
-	a1 = wasm_input(1);
+	var a0, a1 uint64
+	a0 = wasm_input(1)
+	a1 = wasm_input(1)
 	for i := 2; i <= 1000; i++ {
-		an = a0 + a1;
-		a0 = a1;
-		a1 = an;
+		a0, a1 = a1, a0 + a1
 	}
-	ai := wasm_input(1);
-	if ai != an {
-		require(0);
+	an := wasm_input(1)
+	if an != a1 {
+		require(0)
 	}
 }
