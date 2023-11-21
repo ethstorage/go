@@ -409,9 +409,14 @@ func writeMemorySec(ctxt *ld.Link, ldr *loader.Loader) {
 
 	const wasmPageSize = 64 << 10 // 64KB
 
+	if initialSize > 1024*wasmPageSize {
+		panic(fmt.Sprintf("Wasm minimum memory %v bytes exceeds maximum limit: 64 Mb", initialSize))
+	}
+
 	writeUleb128(ctxt.Out, 1)                        // number of memories
-	ctxt.Out.WriteByte(0x00)                         // no maximum memory size
-	writeUleb128(ctxt.Out, initialSize/wasmPageSize) // minimum (initial) memory size
+	ctxt.Out.WriteByte(0x01)                         // should be 0x01, when maximum memory needs to be set; otherwise, 0x00
+	writeUleb128(ctxt.Out, initialSize/wasmPageSize) // minimum (initial) memory size, should be smaller than 1024
+	writeUleb128(ctxt.Out, 1024)                     // maximum (initial) memory size
 
 	writeSecSize(ctxt, sizeOffset)
 }
